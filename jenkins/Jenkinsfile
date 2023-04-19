@@ -11,7 +11,9 @@ pipeline {
             steps {
             echo "Testing..."
             echo "Custom deployment is set to ${params.CustomDeployment}"
-            sleep(5)
+            dir("simple-java-maven-app) {
+                sleep(10)        
+            }
             echo "Done."
             }
         }
@@ -25,8 +27,7 @@ pipeline {
                     echo "Deployment Skipped."
                 }
                 }
-            }
-            sleep(5)
+            }           
         }
         stage("Verify") {
             steps {
