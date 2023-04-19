@@ -1,25 +1,34 @@
 pipeline {
-    agent any
-    
+    agent any    
+    parameters {
+         string( defaultValue: "None", description: "Custom deployment name", name: "CustomDeployment" )
+         choice( choices: ["EU-WEST-2A", "EU-WEST-2B", "EU-WEST-2C"], description: "Select AZ", name: "appZone")
+         booleanParam( defaultValue: false, description: "Confirm Deployment", name: "deployConfirm" )
+    }    
+
     stages {
-        stage('Build') {
+        stage("Test") {
             steps {
-                echo "building...."
+            echo "Testing..."
+            echo "Custom deployment is set to ${params.CustomDeployment}"
+            echo "Done."
             }
         }
-        stage('Test') {
+        stage("Deploy") {
             steps {
-                echo "testing..."
-            }            
-        }
-        stage('Deliver') {
-            steps {
-                echo "delivering..."
+            script {
+                if(params.deployConfirm) {
+                    echo "Deploying to ${params.appZone}"
+                    echo "Done."
+                } else {
+                    echo "Deployment Skipped."
+                }
+                }
             }
         }
-        stage('Complete'){
+        stage("Verify") {
             steps {
-                echo 'Job Complete'
+            echo "Deployment verified."
             }
         }
     }
